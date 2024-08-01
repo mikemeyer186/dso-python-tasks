@@ -9,3 +9,4 @@ __pycache__
 
 # environment variables
 *.env*
+*_env/
