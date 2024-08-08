@@ -11,7 +11,7 @@ This is a command-line tool that covers the following features:
 <br>
 
 > [!CAUTION]
-> Only attack you own local machines!
+> Only attack your own local machines!
 
 <br>
 
