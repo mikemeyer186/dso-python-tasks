@@ -1,6 +1,6 @@
 from itertools import product
 from argparse import ArgumentParser
-import hashlib
+from hashlib import sha1, sha256, sha512, md5
 import string
 
 parser = ArgumentParser(description='Educational version of Hashcat')
@@ -31,7 +31,7 @@ def calculate_hash_md5(pwd: str) -> str:
     Returns:
     str: Hash value in hex view
     """
-    md5_hash = hashlib.md5(pwd.encode())
+    md5_hash = md5(pwd.encode())
     hex = md5_hash.hexdigest()
     return hex
 
@@ -46,7 +46,7 @@ def calculate_hash_sha1(pwd: str) -> str:
     Returns:
     str: Hash value in hex view
     """
-    sha1_hash = hashlib.sha1(pwd.encode())
+    sha1_hash = sha1(pwd.encode())
     hex = sha1_hash.hexdigest()
     return hex
 
@@ -61,7 +61,7 @@ def calculate_hash_sha256(pwd: str) -> str:
     Returns:
     str: Hash value in hex view
     """
-    sha256_hash = hashlib.sha256(pwd.encode())
+    sha256_hash = sha256(pwd.encode())
     hex = sha256_hash.hexdigest()
     return hex
 
@@ -76,7 +76,7 @@ def calculate_hash_sha512(pwd: str) -> str:
     Returns:
     str: Hash value in hex view
     """
-    sha512_hash = hashlib.sha512(pwd.encode())
+    sha512_hash = sha512(pwd.encode())
     hex = sha512_hash.hexdigest()
     return hex
 
@@ -89,7 +89,7 @@ def check_hashfile():
         with open(hashfile, 'r', encoding='utf-8') as file:
             hash = file.read().strip()
 
-def check_hashmode(pwd: str):
+def choose_hashmode(pwd: str):
     """
     Checks which hashmode is choosen by user and calculates the hashvalue 
     with the corresponding function.
@@ -130,19 +130,19 @@ def dictionary_attack():
     with open(wordlist, 'r') as list:
         for password in list.readlines():
             pwd = password.strip()
-            pwd_hash = check_hashmode(pwd)
+            pwd_hash = choose_hashmode(pwd)
             compare_hash_and_password(pwd_hash, pwd)
         print(f'Password not found. Please try another wordlist.')
       
 def bruteforce_attack():
     """
-    Executes the brutforce attack with default characterset (Aa1!), default length (4 - 10) 
+    Executes the brutforce attack with default characterset (Aa1!), default length (4 - 12) 
     of password, calculates the hash value and compares with hashvalue from user input.
     """
-    for n in range (4, 11):
+    for n in range (4, 12):
         for password in product(charSet, repeat=n):
             pwd = "".join(password)
-            pwd_hash = check_hashmode(pwd)
+            pwd_hash = choose_hashmode(pwd)
             compare_hash_and_password(pwd_hash, pwd)
     print(f'Password not found. Please adjust the min and max length.')
 
@@ -151,5 +151,8 @@ if __name__ == "__main__":
 
     if attackmode == 0:
         bruteforce_attack()
-    else:
+    elif attackmode == 1:
         dictionary_attack()
+    else:
+        print("Please enter a valid attackmode!")
+        exit()
