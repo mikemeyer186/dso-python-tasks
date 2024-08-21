@@ -139,7 +139,7 @@ def bruteforce_attack():
     Executes the brutforce attack with default characterset (Aa1!), default length (4 - 12) 
     of password, calculates the hash value and compares with hashvalue from user input.
     """
-    for n in range (4, 12):
+    for n in range (4, 13):
         for password in product(charSet, repeat=n):
             pwd = "".join(password)
             pwd_hash = choose_hashmode(pwd)
