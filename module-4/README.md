@@ -10,4 +10,4 @@ This Folder and its subdirectories contain the code for Module 4 of the DevSecOp
 The following list contains all subdirectories and related tools/projects that were developed.
 
 -   [Hydra](./hydra/README.md)
--   [Hashcat](./hashacat/README.md)
+-   [Hashcat](./hashcat/README.md)
