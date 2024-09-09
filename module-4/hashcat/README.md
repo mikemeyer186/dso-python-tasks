@@ -7,7 +7,7 @@ This is a command-line tool that covers the following features:
 
 -   Calculating hash values with 4 different algorithms
 -   Dictionary attack with a wordlist
--   Bruteforce attack with a default characterset and password length
+-   Bruteforce attack with a default characterset and individual password length
 
 <br>
 
@@ -60,13 +60,15 @@ python hashcat.py --help
 
 ## Available options
 
-| Option                 | Description                                           | Required |
-| ---------------------- | ----------------------------------------------------- | -------- |
-| `-m` <br> `--mode`     | Hashmode: 0=MD5, 1=SHA-1, 2=SHA-256, 3=SHA-512        | x        |
-| `-a` <br> `--attack`   | Attackmode: 0=Brute-Force Attack, 1=Dictionary Attack | x        |
-| `-s` <br> `--hash`     | Hash value                                            |          |
-| `-S` <br> `--hashfile` | Path and filename of a hashfile (e.g. txt-file)       |          |
-| `-W` <br> `--wordlist` | Path and filename of a wordlist (e.g. "rockyou.txt")  |          |
+| Option                  | Description                                           | Required |
+| ----------------------- | ----------------------------------------------------- | -------- |
+| `-m` <br> `--mode`      | Hashmode: 0=MD5, 1=SHA-1, 2=SHA-256, 3=SHA-512        | x        |
+| `-a` <br> `--attack`    | Attackmode: 0=Brute-Force Attack, 1=Dictionary Attack | x        |
+| `-s` <br> `--hash`      | Hash value                                            |          |
+| `-S` <br> `--hashfile`  | Path and filename of a hashfile (e.g. txt-file)       |          |
+| `-W` <br> `--wordlist`  | Path and filename of a wordlist (e.g. "rockyou.txt")  |          |
+| `-min` <br> `--minimum` | Minimum length of password                            |          |
+| `-max` <br> `--maximum` | Maximum length of password                            |          |
 
 <br>
 
@@ -111,7 +113,8 @@ Execute `hashcat` with a bruteforce attack, hashalgorithm SHA-256 and a hash val
 python hashcat.py \
   -m 2 \
   -a 0 \
-  -s <your hash value>
+  -s <your hash value> \
+  -min 6
 ```
 
 <br>
@@ -122,5 +125,7 @@ Execute `hashcat` with a bruteforce attack, hashalgorithm MD5 and a hash value i
 python hashcat.py \
   -m 0 \
   -a 0 \
-  -S <path to hashfile>
+  -S <path to hashfile> \
+  -min 8 \
+  -max 12
 ```
